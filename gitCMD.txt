@@ -1,0 +1,13 @@
+git init 创建仓库
+git add file 工作区传到暂存区stage
+git commit -m "comment" 暂存区stage传到仓库
+git log 查看日志
+git log --pretty=oneline  查看修改记录在单行显示
+git reset --hard HEAD^ 回退到上一版本
+git reset --hard HEAD^^ 回退到上上一版本
+git reset --hard 13413232 回退到指定版本
+get reflog 查看每一次命令
+git status 查看状态
+git diff HEAD -- file查看异常情况
+git reset HEAD file 撤销暂存区的修改
+git checkout -- file 撤销工作区的修改
