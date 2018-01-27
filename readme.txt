@@ -5,3 +5,4 @@ Git tracks changes of files.
 Git is a good version.
 Creating a new branch is quick.
 Create a new branch is quick and simple.
+we are family.
