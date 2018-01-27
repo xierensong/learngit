@@ -11,3 +11,14 @@ git status 查看状态
 git diff HEAD -- file查看异常情况
 git reset HEAD file 撤销暂存区的修改
 git checkout -- file 撤销工作区的修改
+git rm 查看状态
+git remote add origin git@github.com:michaelliao/learngit.git  本地仓库和远程仓库关联
+ git push -u origin master  上传本地代码到远程仓库
+ git clone git@github.com:michaelliao/gitskills.git  从远程库克隆到本地
+ 
+ git branch 查看分支
+ git branch name 创建分支
+ git checkout name 切换分支
+ git checkout -b name 创建并切换分支
+git merge name  合并某分支到当前分支 
+ git branch -d name  删除分支
