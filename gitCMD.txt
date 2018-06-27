@@ -1,4 +1,4 @@
-git init 创建仓库
+﻿git init 创建仓库
 git add file 工作区传到暂存区stage
 git commit -m "comment" 暂存区stage传到仓库
 git log 查看日志
@@ -15,7 +15,7 @@ git rm 查看状态
 git remote add origin git@github.com:michaelliao/learngit.git  本地仓库和远程仓库关联
  git push -u origin master  上传本地代码到远程仓库
  git clone git@github.com:michaelliao/gitskills.git  从远程库克隆到本地
- 
+ git pull 从远程库更新版本到本地
  git branch 查看分支
  git branch name 创建分支
  git checkout name 切换分支
