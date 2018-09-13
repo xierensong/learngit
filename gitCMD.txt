@@ -27,3 +27,7 @@ git branch --set-upstream-to=origin/master master 本地和远程分支建立关
  
  git fetch --all   下载远程库，不做合并
  git reset --hard origin/master   把HEAD指向刚刚下载的最新版本
+
+git status 查看工作区变化
+git reset HEAD getPatch.py 回滚对文件的操作
+git checkout  getPatch.py 重新获取文件
