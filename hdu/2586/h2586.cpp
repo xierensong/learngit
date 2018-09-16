@@ -15,10 +15,10 @@ int dis;
 
 vector<NodeType> node[maxn];
 
-int tot=0, value[maxn];
+int tot=1, value[maxn];
 int dep[maxn *4], pos[maxn], t[maxn * 4];
 int dp[maxn *4][12];
-bool v[maxn];
+int v[maxn];
 int n = 0;
 
 void addEdge(int x, int y, int value)
@@ -47,15 +47,15 @@ void printTree()
 void printList()
 {
 	cout << "pos: " << '\t';
-	for (int i = 0; i <= n; i ++)
+	for (int i = 1; i <= n; i ++)
 		cout << pos[i] << '\t';
 	cout << endl;
 	cout << "t: " << '\t';
-	for (int i = 0; i <= 2 * n; i ++)
+	for (int i = 1; i <= 2 * n; i ++)
 		cout << t[i] << '\t';
 	cout << endl;
 	cout << "dep: " << '\t';
-	for (int i = 0; i <= 2 * n; i ++)
+	for (int i = 1; i <= 2 * n; i ++)
 		cout << dep[i] << '\t';
 	cout << endl;
 }
@@ -63,6 +63,7 @@ void printList()
 void dfs(int u, int dfn)
 {
 	int i;
+	cout << "dfs start " << u << '\t' << dfn << endl;
 	//not visited
 	if (!v[u])
 	{
@@ -71,15 +72,22 @@ void dfs(int u, int dfn)
 	}
 	dep[tot] = dfn;
 	t[tot++] = u;
+	cout << "pos " << u << " :" << pos[u] << endl;
+	cout << "dep " << tot -1 << " :" << dep[tot-1] << endl;
+	cout << "t " << tot -1 << " :" << t[tot-1] << endl;
 	vector<NodeType>::iterator p;
 	for(p = node[u].begin(); p < node[u].end(); p++)
 	{
-		if (v[u])
+		if (v[p->son])
 			continue;
 		dfs(p->son, dfn+1);
 		dep[tot]=dfn;
-		t[tot++]=u;
-	}		
+		t[tot]=u;
+		tot++;
+		cout << "dep " << tot - 1 << " :" << dep[tot-1] << endl;
+		cout << "t " << tot -1 << " :" << t[tot-1] << endl;
+	}	
+	cout << "dfs end " << u << '\t' << dfn << endl;	
 }
 
 int main()
@@ -99,13 +107,15 @@ int main()
 		printTree();
 		printList();
 		//init v[], 0
-		memset(v,maxn, 0);
-		memset(pos,maxn,-1);
-		memset(dep,maxn,-1);
-		memset(t,maxn,-1);
+		memset(v, 0, maxn);
+		memset(pos, -1, maxn);
+		memset(dep, -1, maxn);
+		memset(t, -1, maxn);
 
-		for (int i = 0; i <= n; i++)		
-			cout << v[0] << '\t';
+		dfs(1,1);
+
+		for (int i = 1; i <= n; i++)		
+			cout << v[i] << '\t';
 		cout << endl;
 		printList();
 	}	
