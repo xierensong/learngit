@@ -6,65 +6,91 @@
 
 using namespace std;
 
-#define maxn 40005
+#define maxn 41003
 
-typedef struct NodeType {
-int son;
+typedef struct EdgeType {
+int node;
+int next;
 int dis;
-}NodeType;
+}EdgeType;
 
-vector<NodeType> node[maxn];
+EdgeType edges[maxn * 2];
 
+int heads[maxn];
 int tot=1, value[maxn];
 int dep[maxn *4], pos[maxn], t[maxn * 4];
-int dp[maxn *4][12];
+int dp[maxn *4][25];
 int v[maxn];
-int fa[maxn];
+//int fa[maxn];
 int dis[maxn];
-int n = 0;
+int n = 0, size = 0;
 
 void addEdge(int x, int y, int value)
 {
-	NodeType node1, node2;
-	node1.son = y;
-	node1.dis = value;
-	node[x].insert(node[x].end(), node1);
-	node2.son = x;
-	node2.dis = value;
-	node[y].insert(node[y].end(), node2);
+
+    EdgeType  edge1;
+    edge1.node = x;
+    edge1.next = heads[y];
+    edge1.dis = value;
+    edges[size] = edge1;
+    heads[y] = size++;
+
+    EdgeType edge2;
+    edge2.node = y;
+    edge2.next = heads[x];
+    edge2.dis = value;
+    edges[size] = edge2;
+    heads[x] = size++;
+    
 }
 
 void printTree()
 {
-	vector<NodeType>::iterator p;
+    int j = 0;
+    cout << "head: " << endl;
+    for (int i = 1; i <= n; i++)
+      cout << i << '\t' << heads[i] << endl;
+    cout << endl;
+    cout << "edges: " << endl;
+    for (int i = 1; i <= size; i++)
+      cout <<i << '\t' << edges[i].node << '\t' 
+            << edges[i].next << '\t'
+            << edges[i].dis << endl;
+    cout << endl;
+    
 	for (int i = 1; i <= n; i ++)
 	{
 		cout << i << '\t';
-		for (p = node[i].begin(); p < node[i].end(); p ++)
-			cout << p->son << '\t' << p->dis << '\t';
+		for (j = heads[i]; j > -1; j = edges[j].next)
+        {
+            cout << edges[j].node << '\t';
+			cout << edges[j].dis << '\t';
+        }
 		cout << endl;
 	}  	
 }
 
 void printList()
 {
-	cout << "pos: ";
+	cout << "pos:" << '\t';
 	for (int i = 0; i <= n; i ++)
 		cout << pos[i] << '\t';
 	cout << endl;
-    cout << "father: ";
+    /*
+    cout << "father:" << '\t';
     for (int i = 0; i <= n; i ++)
         cout << fa[i] << '\t';
     cout << endl;
-    cout << "dis: ";
+    */
+    cout << "dis:" << '\t';
     for (int i = 0; i <= n; i++)
       cout << dis[i] << '\t';
     cout << endl;
-	cout << "t: ";
+	cout << "t:" << '\t';
 	for (int i = 0; i <= 2 * n; i ++)
 		cout << t[i] << '\t';
 	cout << endl;
-	cout << "dep: ";
+	cout << "dep:" << '\t';
 	for (int i = 0; i <= 2 * n; i ++)
 		cout << dep[i] << '\t';
 	cout << endl;
@@ -87,21 +113,21 @@ void dfs(int u, int dfn)
 	cout << "dep " << tot -1 << " :" << dep[tot-1] << endl;
 	cout << "t " << tot -1 << " :" << t[tot-1] << endl;
 	*/
-    vector<NodeType>::iterator p;
-	for(p = node[u].begin(); p < node[u].end(); p++)
+    int j = 0;
+    for (j = heads[u]; j > -1; j = edges[j].next)
 	{
-		if (v[p->son])
+        //cout << "v: " << '\t' << edges[j].node << '\t' << v[edges[j].node] << endl;
+		if (v[edges[j].node])
 			continue;
-        fa[p->son] = u;
-        dis[p->son] += p->dis;
-        //cout << "fa " << p->son << '\t' << fa[p->son] << endl;
-        //cout << "dis " << p->son << '\t' << dis[p->son] << endl;
-		dfs(p->son, dfn+1);
+        dis[edges[j].node] = dis[u] + edges[j].dis;
+        //cout << "dis " << edges[j].node << '\t' << edges[j].dis << endl;
+		dfs(edges[j].node, dfn+1);
 		dep[tot]=dfn;
-		t[tot]=u;
-		tot++;
-		//cout << "dep " << tot - 1 << " :" << dep[tot-1] << endl;
-		//cout << "t " << tot -1 << " :" << t[tot-1] << endl;
+		t[tot++]=u;
+        /*
+		cout << "dep " << tot - 1 << " :" << dep[tot-1] << endl;
+		cout << "t " << tot -1 << " :" << t[tot-1] << endl;
+        */
 	}	
 	//cout << "dfs end " << u << '\t' << dfn << endl;	
 }
@@ -116,16 +142,18 @@ void init()
   //compute values from smaller to bigger intervals
   for (j = 1; 1 << j <= tot; j++)
     for (i = 1; i + (1 << j) - 1 < tot; i++)
-        if (dep[dp[i][j - 1]] < dep[dp[i + (1 << (j - 1))][j - 1]])
+        if (dep[dp[i][j - 1]] < dep[dp[i + (1 << j - 1)][j - 1]])
           dp[i][j] = dp[i][j - 1];
         else
-          dp[i][j] = dp[i + (1 << (j - 1))][j - 1];
+          dp[i][j] = dp[i + (1 << j - 1)][j - 1];
 }
 
 int RMQ(int p1, int p2)
 {
   int k = 0;
-  k = log2 (p2 - p1 + 1);
+  int len = p2 - p1 + 1;
+  //k = log2 (p2 - p1 + 1);
+  k = log(len*1.0)/log(2.0);
   //if ((1 << k) < p2 - p1 + 1) 
    // k++;
   //cout << p1 << '\t' << k << p2 - (1 << k) + 1 << endl;
@@ -144,11 +172,6 @@ int lca(int v1, int v2)
         return RMQ(pos[v2], pos[v1]);
 }
 
-int sum(int node, int parent)
-{
-  int value = 0;
-  
-}
 int main()
 {
 	int T = 0;
@@ -157,8 +180,10 @@ int main()
 	{
 		int m=0;
         tot = 1;
+        size = 1;
 		scanf("%d %d", &n, &m);
 		int x = 0, y = 0, value = 0;
+        memset(heads,-1,sizeof(heads));
 		for (int i = 0; i < n - 1; i ++)
 		{
 			scanf("%d %d %d", &x, &y, &value);
@@ -166,14 +191,12 @@ int main()
 		}
 		//printTree();
 		//printList();
-		//init v[], 0
-		memset(v, 0, maxn);
-		memset(pos, -1, maxn);
-        memset(fa, -1, maxn);
-        memset(dis, 0, maxn);
-		memset(dep, -1, maxn*4);
-		memset(t, -1, maxn*4);
-        memset(dp,-1, maxn * 4 * 12);
+		memset(v, 0, sizeof(v));
+		memset(pos, -1, sizeof(pos));
+        memset(dis, 0, sizeof(dis));
+		memset(dep, -1, sizeof(dep));
+		memset(t, -1, sizeof(t));
+        memset(dp,-1, sizeof(dp));
 
 		dfs(1,1);
         
@@ -204,8 +227,6 @@ int main()
             cout << "least: " << least << endl;*/
             cout << dis[p1] + dis[p2] - 2 * dis[least] << endl;
         }
-        for (int i = 0; i <= n; i ++)
-          node[i].clear();
 
 	}	
 	return 0;
