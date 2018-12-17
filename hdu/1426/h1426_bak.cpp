@@ -2,7 +2,6 @@
 #include<cstdio>
 #include<vector>
 #include<algorithm>
-#include<stdio.h>
 
 using namespace std;
 
@@ -12,9 +11,6 @@ typedef struct POS
   int y;
 } POS;
 
-POS posList[81];
-//vector<POS> posArray[9];
-int num;
 int array[9][9];
 /*
 int array[9][9] = {{7,1,2,0,6,0,3,5,8},
@@ -64,43 +60,27 @@ vector<int> calc_num(int col)
   return numList;
 }
 
-void calc_pos(int col)
+vector<POS>  calc_pos(int col)
 {
-  //vector<POS> posList;
+  vector<POS> posList;
   POS pos_item;
+  pos_item.x = 1;
+  pos_item.y = 2;
+  int i = 0;
   for (int i = 0; i < 9; i ++)
     if (array[i][col] == 0)
     {
         pos_item.x = i;
         pos_item.y = col;
-        posArray[col].push_back(pos_item);
+        posList.push_back(pos_item);
     }
+  //cout << "pos list:" << endl;
   /*
-  cout << "pos list:" << endl;
-  
-  for (vector<POS>::iterator it = posArray[col].begin();
-        it < posArray[col].end(); it++)
+  for (vector<POS>::iterator it = posList.begin();
+        it < posList.end(); it++)
     cout << it -> x << '\t' << it -> y << endl;
- */ 
-  //return posList;
-}
-
-void calc_pos1()
-{
-  POS pos_item;
-  int num = 0;;
-  for (int i = 0; i < 9; i ++)
-  {
-    for (int j = 0; j < 9; j ++)
-    if (array[i][col] == 0)
-    {
-      posList
-      pos_item.x = i;
-      pos_item.y = col;
-      posArray[0].push_back(pos_item);
-    }
-  }
-
+  */
+  return posList;
 }
 
 void print()
@@ -111,11 +91,9 @@ void print()
      //cout << endl;
      for (j = 0; j < 9; j ++) 
      {   
-        //cout << array[i][j] << ' ';
-        printf("%d ", array[i][j]);
+        cout << array[i][j] << ' ';
      }   
-     //cout << endl;
-     printf("\n");
+     cout << endl;
   }
 }
 
@@ -132,18 +110,76 @@ int check(int x, int y)
   {
     if (array[x][j] == value && j != y)
       return 0;
-    if (array[j][y] == value && j != x)
-      return 0;
   }
   //检查局部是否有重复
-  int tmpx = (x/3)*3, tmpy=(y/3)*3;
-  for(int i = tmpx; (i < tmpx + 3) && (i != x); ++i)
+  //(0,0)
+  //cout << "check local" << endl;
+  if ((x >= 0) && (x <= 2) && (y >= 0) && (y <= 2)) 
   {
-    for (int j = tmpy; j < (tmpy + 3) && (j != y); ++j)
-    {
+    for(int i = 0; i <= 2 && i != x; i++)
+      for(int j = 0; j <= 2 && j != y; j++)
+      {
         if (array[i][j] == value)
           return 0;
-    }
+      }
+  } 
+  //(0,1)
+  if (x >= 0 && x <= 2 && y >= 3 && y <= 5)
+  {
+    for (int i = 0; i <= 2 && i != x; i++)
+      for(int j = 3; j <= 5 && j != y; j++)
+      {
+        if (array[i][j] == value) return 0;
+      }
+  }
+  //(0,2)
+  if (x >= 0 && x <= 2 && y >= 6 && y <= 8)
+  {
+    for (int i = 0; i <= 2 && i != x; i++)
+      for(int j = 6; j <= 8 && j != y; j++)
+        if (array[i][j] == value) return 0;
+  }
+  //(1,0)
+  if (x >= 3 && x <= 5 && y >= 0 && y <= 2)
+  {
+    for (int i = 3; i <= 5 && i != x; i++)
+      for(int j = 0; j <= 2 && j != y; j++)
+        if (array[i][j] == value) return 0;
+  }
+  //(1,1)
+  if (x >= 3 && x <= 5 && y >= 3 && y <= 5)
+  {
+    for (int i = 3; i <= 5 && i != x; i++)
+      for(int j = 3; j <= 5 && j != y; j++)
+        if (array[i][j] == value) return 0;
+  }
+  //(1,2)
+  if (x >= 3 && x <= 5 && y >= 6 && y <= 8)
+  {
+    for (int i = 3; i <= 5 && i != x; i++)
+      for(int j = 6; j <= 8 && j != y; j++)
+        if (array[i][j] == value) return 0;
+  }
+  //(2,0)
+  if (x >= 6 && x <= 8 && y >= 0 && y <= 2)
+  {
+    for (int i = 6; i <= 8 && i != x; i++)
+      for(int j = 0; j <= 2 && j != y; j++)
+        if (array[i][j] == value) return 0;
+  }
+  //(2,1)
+  if (x >= 6 && x <= 8 && y >= 3 && y <= 5)
+  {
+    for (int i = 6; i <= 8 && i != x; i++)
+      for(int j = 3; j <= 5 && j != y; j++)
+        if (array[i][j] == value) return 0;
+  }
+  //(2,2)
+  if (x >= 6 && x <= 8 && y >= 6 && y <= 8)
+  {
+    for (int i = 6; i <= 8 && i != x; i++)
+      for(int j = 6; j <= 8 && j != y; j++)
+        if (array[i][j] == value) return 0;
   }
   return 1;
 }
@@ -159,17 +195,17 @@ int dfs()
   for(int i = 0; i < 9; i++)
   {
     //cout << "colomn number: " << i << endl;
-    //numList = calc_num(i);
-    posList = posArray[i];  
+    numList = calc_num(i);
+    posList = calc_pos(i);  
 
-    //lenNum = numList.size();
-    //lenPos = posList.size();
+    lenNum = numList.size();
+    lenPos = posList.size();
     // 候选数字和候选位置数量不等，失败
-    //if (lenNum != lenPos)
-    //  return 0;
+    if (lenNum != lenPos)
+      return 0;
     // 候选数字和候选位置数量相等，都为0，成功
-    //else if (lenNum == 0 && lenPos == 0)
-    //  continue;
+    else if (lenNum == 0 && lenPos == 0)
+      continue;
     // 候选数字和候选位置数量相等，不为0，遍历候选数字和位置
     for (vector<POS>::iterator it = posList.begin();
             it < posList.end(); it++)
@@ -178,19 +214,15 @@ int dfs()
         //cout << "current postion" << endl;
         int x = it -> x;
         int y = it -> y;
-        //如果当前位置已经有值，下一个位置
-        if (array[x][y] != 0)
-          continue;
         //遍历候选数字
-        //for (vector<int>::iterator num_it = numList.begin();
-        //       num_it < numList.end(); num_it++)
-        for (int num = 1; num < 10; num++)
+        for (vector<int>::iterator num_it = numList.begin();
+               num_it < numList.end(); num_it++)
         {
-            //int num = (*num_it);
-            
-            //cout << "x y array[x][y]" << '\t' << x
-             //   << '\t' << y << '\t' << num << endl;
-            
+            int num = (*num_it);
+            /*
+            cout << "x y array[x][y]" << '\t' << x
+                << '\t' << y << '\t' << num << endl;
+            */
             array[x][y] = num;
             // 如果dfs结果为1,说明当前候选数字可用
             if (check(x,y))
@@ -253,14 +285,7 @@ int main()
             array[i][j] = 0;
       }
     }
-
-    //计算每列空白格
-    /*for (i = 0; i < 9; i++)
-    {
-        calc_pos(i);
-    } 
-    */
-    calc_pos1();  
+    
 
     if (dfs())
     {

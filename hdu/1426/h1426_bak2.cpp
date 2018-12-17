@@ -12,9 +12,8 @@ typedef struct POS
   int y;
 } POS;
 
-POS posList[81];
-//vector<POS> posArray[9];
-int num;
+vector<POS> posArray[9];
+
 int array[9][9];
 /*
 int array[9][9] = {{7,1,2,0,6,0,3,5,8},
@@ -88,13 +87,10 @@ void calc_pos(int col)
 void calc_pos1()
 {
   POS pos_item;
-  int num = 0;;
   for (int i = 0; i < 9; i ++)
   {
-    for (int j = 0; j < 9; j ++)
     if (array[i][col] == 0)
     {
-      posList
       pos_item.x = i;
       pos_item.y = col;
       posArray[0].push_back(pos_item);
@@ -255,12 +251,10 @@ int main()
     }
 
     //计算每列空白格
-    /*for (i = 0; i < 9; i++)
+    for (i = 0; i < 9; i++)
     {
         calc_pos(i);
-    } 
-    */
-    calc_pos1();  
+    }    
 
     if (dfs())
     {
