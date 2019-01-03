@@ -1,0 +1,19 @@
+A10
+start, pos:4	7
+S20
+start, pos:8	11
+W10
+start, pos:12	15
+D30
+start, pos:16	17
+X
+start, pos:18	21
+A1A
+start, pos:22	28
+B10A11
+start, pos:29	29
+
+start, pos:30	33
+A10
+start, pos:34	-1
+10,-10
