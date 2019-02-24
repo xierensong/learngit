@@ -51,5 +51,7 @@ int main()
   creator -> AnOperation(); //调用缺省的工厂方法完成操作
   ConcreteCreator* concreteCreator = new ConcreteCreator(); //创建一个具体的工厂方法类
   concreteCreator -> AnOperation(); //调用具体的工厂方法完成操作,和缺省的工厂方法调用的方法是一个
+  Creator* creator1 = new ConcreteCreator();
+  creator1 -> AnOperation();
   return 0;
 }
